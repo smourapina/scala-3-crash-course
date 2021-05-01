@@ -10,8 +10,8 @@ case class Person private (name: String)
 // The following won't compile as apply and copy are now private.
 // They can only be used in the companion object.
 
-// val person: Person = Person("name")
-// val newPerson = person.copy(name = "other")
+//val person: Person = Person("name") 
+//val newPerson = person.copy(name = "other")
 
 /**
  * Example 2: Top level definitions

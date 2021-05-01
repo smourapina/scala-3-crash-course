@@ -15,12 +15,16 @@ object OpaqueTypes:
   /**
    * Example 1: From value classes to Opaque Types.
    */
-  case class FirstName(value: String) extends AnyVal
+//  case class FirstName(value: String) extends AnyVal
+  opaque type FirstName >: String = String // guaranteed not to box on runtime
 
   /**
    * Example 2: Defining companion object with constructors and extensions.
    */
-
+  object FirstName:
+    def fromString(str: String): FirstName = str
+  
+  extension (fn: FirstName) def value: String = fn // extension method cannot be val, needs to be def
   /**
    * Example 3: Type bounds.
    */
@@ -28,7 +32,11 @@ object OpaqueTypes:
   ???
 
 object OpaqueTypesUsage:
-  ???
+  import OpaqueTypes.*
+  val x: FirstName = FirstName.fromString("name")
+  x.value
+  val xx: FirstName = "name" // works becuse of type bound above
+  // val yy: String = x // works if we put lower type bound above
 
 /**
  * Exercises
@@ -39,8 +47,9 @@ object OpaqueTypesUsage:
 //
 object OpaqueTypeExercises:
   import java.util.Locale
-  final case class Country private (code: String) extends AnyVal
-  object Country {
+  opaque type Country = String
+  
+  object Country:
     private val validCodes = Locale.getISOCountries
 
     private def apply(code: String): Country = new Country(code)
@@ -54,10 +63,11 @@ object OpaqueTypeExercises:
 
     val Germany: Country = Country("DE")
     val UnitedKingdom: Country = Country("GB")
-  }
+
+  extension (c: Country) def code: String = c
 
 @main def opaqueTypeExercisesMain =
-  import OpaqueTypeExercises._
+  import OpaqueTypeExercises.*
   val country: Option[Country] = Country.fromIso2CountryCode("DE")
   println(country)
   println(country.map(_.code))

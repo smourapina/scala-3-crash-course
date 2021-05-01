@@ -10,7 +10,7 @@ lazy val root = project
   )
 
   scalacOptions ++= Seq(
-  "-encoding", "utf8",
+  //"-encoding", "utf8",
   "-Xfatal-warnings",
   "-deprecation",
   "-unchecked",
